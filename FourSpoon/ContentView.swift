@@ -8,14 +8,33 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var restaurants: [RestaurantDTO] = []
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            ScrollView {
+                LazyVStack {
+                    ForEach(restaurants, id: \.id) { restaurant in
+                        Text(restaurant.attributes.name)
+                    }
+                }.padding()
+            }
+            .navigationTitle("Restaurants")
         }
-        .padding()
+        .task {
+            await loadRestaurants()
+        }
+    }
+
+    func loadRestaurants() async {
+        let url = URL(string: "https://api.eat-sandbox.co/consumer/v2/restaurants?region_id=3906535a-d96c-47cf-99b0-009fc9e038e0")!
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let restaurants = try JSONDecoder().decode(RestaurantListResponse.self, from: data)
+            self.restaurants = restaurants.data
+        } catch {
+            print("Error fetching restaurants: \(error)")
+        }
     }
 }
 
