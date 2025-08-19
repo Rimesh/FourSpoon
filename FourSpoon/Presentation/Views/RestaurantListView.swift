@@ -16,13 +16,26 @@ struct RestaurantListView: View {
                 if viewModel.isInitialLoading {
                     initialLoadingView
                 } else {
-                    contentView
+                    if viewModel.restaurants.isEmpty {
+                        emptyListView
+                    } else {
+                        contentView
+                    }
                 }
             }
             .navigationTitle("Restaurants")
         }
-        .task {
-            await viewModel.loadRestaurants()
+        .task { await viewModel.loadRestaurants() }
+        .alert(
+            "Something went wrong,\n Please try again later...",
+            isPresented: $viewModel.showError
+        ) {
+            HStack {
+                Button(action: viewModel.reloadRestaurantList) {
+                    Text("Try Again")
+                }
+                Button("Cancel", role: .cancel) {}
+            }
         }
     }
 
@@ -54,5 +67,21 @@ struct RestaurantListView: View {
             }
             .padding()
         }
+    }
+
+    var emptyListView: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            Image(systemName: "fork.knife")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 100)
+                .foregroundStyle(.gray)
+            Text("No restaurants in your region...\nCheck back later, we are constantly partnering with new restaurants.")
+                .font(.system(size: 22, weight: .semibold))
+                .padding()
+            Spacer()
+        }
+        .padding()
     }
 }

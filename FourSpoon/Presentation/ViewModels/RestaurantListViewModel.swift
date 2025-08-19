@@ -13,10 +13,11 @@ class RestaurantListViewModel: ObservableObject {
     @Published private(set) var restaurants: [RestaurantListItem] = []
     @Published private(set) var isInitialLoading = false
     @Published private(set) var isLoadingMoreData = false
-    @Published private(set) var errorMessage: String?
     @Published private(set) var hasMorePages = true
 
     @Published private var currentPage = 1
+
+    @Published var showError = false
 
     private let getRestaurantsUseCase: GetRestaurantListUseCaseProtocol
 
@@ -40,7 +41,7 @@ class RestaurantListViewModel: ObservableObject {
             currentPage += 1
             isInitialLoading = false
         } catch {
-            errorMessage = "Something went wrong, Please try again later..."
+            showError = true
             isInitialLoading = false
         }
     }
@@ -62,8 +63,18 @@ class RestaurantListViewModel: ObservableObject {
             currentPage += 1
             isLoadingMoreData = false
         } catch {
-            errorMessage = "Something went wrong, Please try again later..."
+            // fail silently, no need to notify user when Infinite scrolling
             isLoadingMoreData = false
         }
+    }
+
+    func reloadRestaurantList() {
+        currentPage = 1
+        restaurants.removeAll()
+        isInitialLoading = false
+        isLoadingMoreData = false
+        showError = false
+        hasMorePages = true
+        Task { await loadRestaurants() }
     }
 }
