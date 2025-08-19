@@ -72,7 +72,7 @@ struct RestaurantListView: View {
     var emptyListView: some View {
         VStack(spacing: 20) {
             Spacer()
-            Image(systemName: "fork.knife")
+            Image(.cutlery)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
