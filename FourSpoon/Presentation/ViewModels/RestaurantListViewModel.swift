@@ -31,17 +31,14 @@ class RestaurantListViewModel: ObservableObject {
     func loadRestaurants() async {
         isInitialLoading = true
         do {
-            print("Initial loading started")
-            try await Task.sleep(nanoseconds: 1_000_000_000 * 3)
             let response = try await getRestaurantsUseCase.execute(
                 regionId: givenRegionId,
                 page: currentPage
             )
             restaurants = response.data
-//            hasMorePages = response.meta.hasNextPage
+            hasMorePages = response.meta.hasNextPage
             currentPage += 1
             isInitialLoading = false
-            print("Initial loading finished")
         } catch {
             errorMessage = "Something went wrong, Please try again later..."
             isInitialLoading = false
@@ -55,20 +52,16 @@ class RestaurantListViewModel: ObservableObject {
         else { return }
         isLoadingMoreData = true
         do {
-            print("loading more: \(currentPage)")
             let response = try await getRestaurantsUseCase.execute(
                 regionId: givenRegionId,
-                page: 1
+                page: currentPage
             )
-            print("Received: \(response.data.count) objects")
             restaurants.append(contentsOf: response.data)
 
-            hasMorePages = currentPage < 5
-            print("\(currentPage) completed. Total: \(restaurants.count)")
+            hasMorePages = response.meta.hasNextPage
             currentPage += 1
             isLoadingMoreData = false
         } catch {
-            print("Fetching issue....")
             errorMessage = "Something went wrong, Please try again later..."
             isLoadingMoreData = false
         }
