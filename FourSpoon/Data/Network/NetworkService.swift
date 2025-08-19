@@ -38,18 +38,21 @@ class NetworkService: NetworkServiceProtocol {
 
         guard let url = components.url else { throw NetworkError.invalidURL }
 
-        do {
-            print("Requested url: \(url)")
-            let (data, _) = try await session.data(from: url)
+        let (data, urlResponse) = try await session.data(from: url)
 
-            do {
-                let decodedResponse = try JSONDecoder().decode(RestaurantListResponse.self, from: data)
-                return decodedResponse
-            } catch {
-                throw NetworkError.decondingFailure
-            }
+        guard let httpResponse = urlResponse as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+
+        guard (200 ... 299).contains(httpResponse.statusCode) else {
+            throw NetworkError.requestFailed(statusCode: httpResponse.statusCode)
+        }
+
+        do {
+            let decodedResponse = try JSONDecoder().decode(RestaurantListResponse.self, from: data)
+            return decodedResponse
         } catch {
-            throw NetworkError.noInternet
+            throw NetworkError.decondingFailure
         }
     }
 }
