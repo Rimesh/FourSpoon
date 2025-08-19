@@ -27,13 +27,10 @@ struct ContentView: View {
     }
 
     func loadRestaurantsFromApiClient() async {
-        let restaurantRepository = RestaurantRepository(
-            apiClient: APIClient(),
-            apiConfiguration: RestaurantAPIConfiguration()
-        )
+        let restaurantRepository = RestaurantRepository(networkService: NetworkService(baseURL: "https://api.eat-sandbox.co/consumer/v2"))
         do {
-            let restaurants = try await restaurantRepository.getRestaurants(regionId: nil, page: 0)
-            self.restaurants = restaurants.data.map { $0.toDomain() }
+            let response = try await restaurantRepository.getRestaurants(regionId: nil, page: 0)
+            restaurants = response.data
         } catch {
             print("Error: \(error)")
         }

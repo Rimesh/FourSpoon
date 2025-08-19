@@ -8,5 +8,5 @@
 import Foundation
 
 protocol RestaurantRepositoryProtocol {
-    func getRestaurants(regionId: UUID?, page: Int?) async throws -> RestaurantListResponse
+    func getRestaurants(regionId: UUID?, page: Int?) async throws -> PaginatedResponse<RestaurantListItem>
 }

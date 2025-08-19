@@ -8,19 +8,14 @@
 import Foundation
 
 class RestaurantRepository: RestaurantRepositoryProtocol {
-    private let apiClient: APIClientProtocol
-    private let apiConfiguration: RestaurantAPIConfiguration
+    private let networkService: NetworkServiceProtocol
 
-    init(apiClient: APIClientProtocol, apiConfiguration: RestaurantAPIConfiguration) {
-        self.apiClient = apiClient
-        self.apiConfiguration = apiConfiguration
+    init(networkService: NetworkServiceProtocol) {
+        self.networkService = networkService
     }
 
-    func getRestaurants(regionId: UUID?, page: Int?) async throws -> RestaurantListResponse {
-        guard let restaurantListUrl = apiConfiguration.makeRestaurantListURL(regionId: regionId, page: page) else {
-            throw NSError(domain: "Invalid Restaurant URL", code: 1)
-        }
-
-        return try await apiClient.request(url: restaurantListUrl, method: .get)
+    func getRestaurants(regionId: UUID?, page: Int?) async throws -> PaginatedResponse<RestaurantListItem> {
+        let response = try await networkService.getRestaurants(regionId: regionId, page: page)
+        return response.toDomain()
     }
 }
