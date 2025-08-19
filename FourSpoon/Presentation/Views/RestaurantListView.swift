@@ -53,7 +53,7 @@ struct RestaurantListView: View {
         ScrollView {
             LazyVStack {
                 ForEach(viewModel.restaurants.enumerated(), id: \.0) { index, restaurant in
-                    Text(restaurant.name)
+                    RestaurantListItemView(restaurant: restaurant)
                         .onAppear {
                             // Load more, when showing last item in the list
                             if index == viewModel.restaurants.count - 1 {
