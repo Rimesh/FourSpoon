@@ -11,7 +11,11 @@ import SwiftUI
 struct FourSpoonApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            let networkService = NetworkService(baseURL: "https://api.eat-sandbox.co/consumer/v2")
+            let restaurantRepository = RestaurantRepository(networkService: networkService)
+            let getRestaurantListUseCase = GetRestaurantListUseCase(repository: restaurantRepository)
+            let viewModel = RestaurantListViewModel(getRestaurantsUseCase: getRestaurantListUseCase)
+            RestaurantListView(viewModel: viewModel)
         }
     }
 }
