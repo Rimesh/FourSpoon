@@ -22,18 +22,20 @@ struct ContentView: View {
             .navigationTitle("Restaurants")
         }
         .task {
-            await loadRestaurants()
+            await loadRestaurantsFromApiClient()
         }
     }
 
-    func loadRestaurants() async {
-        let url = URL(string: "https://api.eat-sandbox.co/consumer/v2/restaurants?region_id=3906535a-d96c-47cf-99b0-009fc9e038e0")!
+    func loadRestaurantsFromApiClient() async {
+        let restaurantRepository = RestaurantRepository(
+            apiClient: APIClient(),
+            apiConfiguration: RestaurantAPIConfiguration()
+        )
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let restaurants = try JSONDecoder().decode(RestaurantListResponse.self, from: data)
+            let restaurants = try await restaurantRepository.getRestaurants(regionId: nil, page: 0)
             self.restaurants = restaurants.data.map { $0.toDomain() }
         } catch {
-            print("Error fetching restaurants: \(error)")
+            print("Error: \(error)")
         }
     }
 }
