@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var restaurants: [RestaurantDTO] = []
+    @State private var restaurants: [RestaurantListItem] = []
 
     var body: some View {
         NavigationView {
             ScrollView {
                 LazyVStack {
                     ForEach(restaurants, id: \.id) { restaurant in
-                        Text(restaurant.attributes.name)
+                        Text(restaurant.name)
                     }
                 }.padding()
             }
@@ -31,7 +31,7 @@ struct ContentView: View {
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let restaurants = try JSONDecoder().decode(RestaurantListResponse.self, from: data)
-            self.restaurants = restaurants.data
+            self.restaurants = restaurants.data.map { $0.toDomain() }
         } catch {
             print("Error fetching restaurants: \(error)")
         }
