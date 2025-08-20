@@ -9,6 +9,7 @@ import Foundation
 
 protocol NetworkServiceProtocol {
     func getRestaurants(regionId: UUID?, page: Int?) async throws -> RestaurantListResponse
+    func getRestaurantDetails(restaurantId: UUID) async throws -> RestaurantDetailsResponse
 }
 
 class NetworkService: NetworkServiceProtocol {
@@ -50,6 +51,31 @@ class NetworkService: NetworkServiceProtocol {
 
         do {
             let decodedResponse = try JSONDecoder().decode(RestaurantListResponse.self, from: data)
+            return decodedResponse
+        } catch {
+            throw NetworkError.decondingFailure
+        }
+    }
+
+    func getRestaurantDetails(restaurantId: UUID) async throws -> RestaurantDetailsResponse {
+        guard let components = URLComponents(string: "\(baseURL)/restaurants/\(restaurantId.uuidString)") else {
+            throw NetworkError.invalidURL
+        }
+
+        guard let url = components.url else { throw NetworkError.invalidURL }
+
+        let (data, urlResponse) = try await session.data(from: url)
+
+        guard let httpResponse = urlResponse as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+
+        guard (200 ... 299).contains(httpResponse.statusCode) else {
+            throw NetworkError.requestFailed(statusCode: httpResponse.statusCode)
+        }
+
+        do {
+            let decodedResponse = try JSONDecoder().decode(RestaurantDetailsResponse.self, from: data)
             return decodedResponse
         } catch {
             throw NetworkError.decondingFailure

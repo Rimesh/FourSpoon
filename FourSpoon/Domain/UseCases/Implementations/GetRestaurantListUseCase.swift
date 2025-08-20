@@ -7,10 +7,6 @@
 
 import Foundation
 
-protocol GetRestaurantListUseCaseProtocol {
-    func execute(regionId: UUID?, page: Int?) async throws -> PaginatedResponse<RestaurantListItem>
-}
-
 final class GetRestaurantListUseCase: GetRestaurantListUseCaseProtocol {
     private let repository: RestaurantRepositoryProtocol
 

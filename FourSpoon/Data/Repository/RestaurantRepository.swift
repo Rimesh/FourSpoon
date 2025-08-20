@@ -18,4 +18,9 @@ class RestaurantRepository: RestaurantRepositoryProtocol {
         let response = try await networkService.getRestaurants(regionId: regionId, page: page)
         return response.toDomain()
     }
+
+    func getRestaurantDetails(restaurantId: UUID) async throws -> RestaurantDetails {
+        let response = try await networkService.getRestaurantDetails(restaurantId: restaurantId)
+        return response.data.toDomain()
+    }
 }
