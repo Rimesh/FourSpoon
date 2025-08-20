@@ -37,6 +37,9 @@ struct RestaurantListView: View {
                 Button("Cancel", role: .cancel) {}
             }
         }
+        .refreshable {
+            viewModel.reloadRestaurantList()
+        }
     }
 
     var initialLoadingView: some View {
