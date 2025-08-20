@@ -8,23 +8,22 @@
 import SwiftUI
 
 struct RestaurantListView: View {
-    @StateObject var viewModel: RestaurantListViewModel
+    @ObservedObject var viewModel: RestaurantListViewModel
+    @EnvironmentObject private var router: AppRouter
 
     var body: some View {
-        NavigationView {
-            Group {
-                if viewModel.isInitialLoading {
-                    initialLoadingView
+        Group {
+            if viewModel.isInitialLoading {
+                initialLoadingView
+            } else {
+                if viewModel.restaurants.isEmpty {
+                    emptyListView
                 } else {
-                    if viewModel.restaurants.isEmpty {
-                        emptyListView
-                    } else {
-                        contentView
-                    }
+                    contentView
                 }
             }
-            .navigationTitle("Restaurants")
         }
+        .navigationTitle("Restaurants")
         .task { await viewModel.loadRestaurants() }
         .alert(
             "Something went wrong,\n Please try again later...",
@@ -57,6 +56,9 @@ struct RestaurantListView: View {
             LazyVStack {
                 ForEach(viewModel.restaurants.enumerated(), id: \.0) { index, restaurant in
                     RestaurantListItemView(restaurant: restaurant)
+                        .onTapGesture {
+                            router.navigate(to: .restaurantDetails(restaurantId: restaurant.id))
+                        }
                         .onAppear {
                             // Load more, when showing last item in the list
                             if index == viewModel.restaurants.count - 1 {

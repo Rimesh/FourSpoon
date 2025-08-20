@@ -30,6 +30,7 @@ class RestaurantListViewModel: ObservableObject {
     }
 
     func loadRestaurants() async {
+        guard restaurants.isEmpty else { return }
         isInitialLoading = true
         do {
             let response = try await getRestaurantsUseCase.execute(

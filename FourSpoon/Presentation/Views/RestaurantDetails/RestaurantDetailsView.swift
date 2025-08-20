@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RestaurantDetailsView: View {
-    @StateObject var viewModel: RestaurantDetailsViewModel
+    @ObservedObject var viewModel: RestaurantDetailsViewModel
 
     var body: some View {
         Group {

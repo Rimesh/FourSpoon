@@ -15,13 +15,14 @@ class RestaurantDetailsViewModel: ObservableObject {
     @Published var showError = false
 
     private let getRestaurantDetailsUseCase: GetRestaurantDetailsUseCaseProtocol
-
-    private let restaurantId: UUID = .init(uuidString: "436e3abb-a0ff-4f33-a16b-f63b4fc6e031")!
+    private let restaurantId: UUID
 
     init(
-        getRestaurantDetailsUseCase: GetRestaurantDetailsUseCaseProtocol
+        getRestaurantDetailsUseCase: GetRestaurantDetailsUseCaseProtocol,
+        restaurantId: UUID
     ) {
         self.getRestaurantDetailsUseCase = getRestaurantDetailsUseCase
+        self.restaurantId = restaurantId
     }
 
     func loadRestaurantDetails() async {
