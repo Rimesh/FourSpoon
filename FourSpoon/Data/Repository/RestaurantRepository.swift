@@ -14,8 +14,8 @@ class RestaurantRepository: RestaurantRepositoryProtocol {
         self.networkService = networkService
     }
 
-    func getRestaurants(regionId: UUID?, page: Int?) async throws -> PaginatedResponse<RestaurantListItem> {
-        let response = try await networkService.getRestaurants(regionId: regionId, page: page)
+    func getRestaurants(regionId: UUID?, page: Int?, query: String?) async throws -> PaginatedResponse<RestaurantListItem> {
+        let response = try await networkService.getRestaurants(regionId: regionId, page: page, query: query)
         return response.toDomain()
     }
 

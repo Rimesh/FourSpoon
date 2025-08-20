@@ -14,7 +14,11 @@ final class GetRestaurantListUseCase: GetRestaurantListUseCaseProtocol {
         self.repository = repository
     }
 
-    func execute(regionId: UUID?, page: Int?) async throws -> PaginatedResponse<RestaurantListItem> {
-        return try await repository.getRestaurants(regionId: regionId, page: page)
+    func execute(regionId: UUID?, page: Int?, query: String?) async throws -> PaginatedResponse<RestaurantListItem> {
+        return try await repository.getRestaurants(
+            regionId: regionId,
+            page: page,
+            query: query
+        )
     }
 }

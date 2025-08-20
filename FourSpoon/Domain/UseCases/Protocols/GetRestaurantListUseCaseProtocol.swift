@@ -8,5 +8,5 @@
 import Foundation
 
 protocol GetRestaurantListUseCaseProtocol {
-    func execute(regionId: UUID?, page: Int?) async throws -> PaginatedResponse<RestaurantListItem>
+    func execute(regionId: UUID?, page: Int?, query: String?) async throws -> PaginatedResponse<RestaurantListItem>
 }

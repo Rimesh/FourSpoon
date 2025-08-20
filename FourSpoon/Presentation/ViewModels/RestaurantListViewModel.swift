@@ -15,6 +15,8 @@ class RestaurantListViewModel: ObservableObject {
     @Published private(set) var isLoadingMoreData = false
     @Published private(set) var hasMorePages = true
 
+    @Published var searchQuery = ""
+
     @Published private var currentPage = 1
 
     @Published var showError = false
@@ -23,10 +25,18 @@ class RestaurantListViewModel: ObservableObject {
 
     private let givenRegionId: UUID = .init(uuidString: "3906535a-d96c-47cf-99b0-009fc9e038e0")!
 
+    private var subscriptions: Set<AnyCancellable> = []
+
     init(
         getRestaurantsUseCase: GetRestaurantListUseCaseProtocol
     ) {
         self.getRestaurantsUseCase = getRestaurantsUseCase
+        $searchQuery
+            .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+            .sink { _ in
+                self.reloadRestaurantList()
+            }
+            .store(in: &subscriptions)
     }
 
     func loadRestaurants() async {
@@ -35,7 +45,8 @@ class RestaurantListViewModel: ObservableObject {
         do {
             let response = try await getRestaurantsUseCase.execute(
                 regionId: givenRegionId,
-                page: currentPage
+                page: currentPage,
+                query: searchQuery
             )
             restaurants = response.data
             hasMorePages = response.meta.hasNextPage
@@ -56,7 +67,8 @@ class RestaurantListViewModel: ObservableObject {
         do {
             let response = try await getRestaurantsUseCase.execute(
                 regionId: givenRegionId,
-                page: currentPage
+                page: currentPage,
+                query: searchQuery
             )
             restaurants.append(contentsOf: response.data)
 

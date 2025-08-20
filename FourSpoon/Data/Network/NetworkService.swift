@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-    func getRestaurants(regionId: UUID?, page: Int?) async throws -> RestaurantListResponse
+    func getRestaurants(regionId: UUID?, page: Int?, query: String?) async throws -> RestaurantListResponse
     func getRestaurantDetails(restaurantId: UUID) async throws -> RestaurantDetailsResponse
 }
 
@@ -21,7 +21,7 @@ class NetworkService: NetworkServiceProtocol {
         self.baseURL = baseURL
     }
 
-    func getRestaurants(regionId: UUID?, page: Int?) async throws -> RestaurantListResponse {
+    func getRestaurants(regionId: UUID?, page: Int?, query: String?) async throws -> RestaurantListResponse {
         guard var components = URLComponents(string: "\(baseURL)/restaurants") else {
             throw NetworkError.invalidURL
         }
@@ -33,6 +33,10 @@ class NetworkService: NetworkServiceProtocol {
 
         if let page {
             queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
+        }
+
+        if let query {
+            queryItems.append(URLQueryItem(name: "q", value: "\(query)"))
         }
 
         components.queryItems = queryItems.isEmpty ? nil : queryItems

@@ -39,6 +39,10 @@ struct RestaurantListView: View {
         .refreshable {
             viewModel.reloadRestaurantList()
         }
+        .searchable(
+            text: $viewModel.searchQuery,
+            prompt: "Search Restaurants"
+        )
     }
 
     var initialLoadingView: some View {
