@@ -57,7 +57,7 @@ struct RestaurantDetailsView: View {
             VStack(spacing: 0) {
                 RestaurantImageView(imageURL: details.imageURL)
                     .frame(height: 312)
-                VStack {
+                VStack(spacing: 8) {
                     HStack {
                         Text(details.name)
                             .font(.system(size: 24, weight: .semibold))
@@ -66,6 +66,7 @@ struct RestaurantDetailsView: View {
                         }
                         Spacer()
                     }
+                    .padding(.top, 12)
                     Text(details.description)
                         .font(.system(size: 15, weight: .medium))
                     VStack {
@@ -109,6 +110,18 @@ struct RestaurantDetailsView: View {
                     }
                 }
                 .padding(.horizontal, 16)
+                .background(
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: 36,
+                        bottomLeadingRadius: 0,
+                        bottomTrailingRadius: 0,
+                        topTrailingRadius: 36,
+                        style: .continuous
+                    )
+                    .foregroundStyle(.white)
+                )
+                .padding(.top, -36)
+
                 Spacer()
             }
         }
