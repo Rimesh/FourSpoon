@@ -1,0 +1,51 @@
+//
+//  RestaurantDetailsResponse.swift
+//  FourSpoon
+//
+//  Created by Rimesh Jotaniya on 20/08/25.
+//
+
+import Foundation
+
+struct RestaurantDetailsResponse: Decodable {
+    let data: RestaurantDetailsDTO
+}
+
+struct RestaurantDetailsDTO: Decodable {
+    let id: UUID
+    let attributes: RestaurantDetailsAttributesDTO
+}
+
+struct RestaurantDetailsAttributesDTO: Decodable {
+    let name: String
+    let priceLevel: Int
+    let phone: String?
+    let menuURL: URL?
+    let cuisine: String
+    let imageURL: URL
+    let latitude: Double
+    let longitude: Double
+    let addressLine1: String
+    let ratingsAverage: String?
+    let ratingsCount: Int?
+    let labels: [String]
+    let alcohol: Bool
+    let smoking: Bool
+    let valet: Bool
+    let description: String
+    let externalRatingsURL: URL?
+    let imageURLs: [URL]
+
+    enum CodingKeys: String, CodingKey {
+        case name, phone, cuisine, latitude, longitude, labels
+        case alcohol, smoking, valet, description
+        case externalRatingsURL = "external_ratings_url"
+        case priceLevel = "price_level"
+        case menuURL = "menu_url"
+        case imageURL = "image_url"
+        case imageURLs = "image_urls"
+        case addressLine1 = "address_line_1"
+        case ratingsAverage = "ratings_average"
+        case ratingsCount = "ratings_count"
+    }
+}
