@@ -44,6 +44,5 @@ struct RestaurantImageView: View {
         }
         .frame(height: 242)
         .frame(maxWidth: .infinity)
-        .clipShape(.rect(cornerRadius: 36))
     }
 }
