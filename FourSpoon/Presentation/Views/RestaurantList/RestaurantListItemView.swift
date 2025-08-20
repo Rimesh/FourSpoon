@@ -30,6 +30,7 @@ struct RestaurantListItemView: View {
             }
             ZStack(alignment: .bottomLeading) {
                 RestaurantImageView(imageURL: restaurant.imageURL)
+                    .frame(height: 242)
                     .clipShape(.rect(cornerRadius: 36))
                 VStack(alignment: .leading) {
                     if let priceLevel = restaurant.priceLevel {

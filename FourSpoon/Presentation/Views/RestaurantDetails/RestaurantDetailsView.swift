@@ -54,11 +54,9 @@ struct RestaurantDetailsView: View {
 
     func contentView(details: RestaurantDetails) -> some View {
         ScrollView {
-            VStack {
+            VStack(spacing: 0) {
                 RestaurantImageView(imageURL: details.imageURL)
-                    .scaledToFill()
                     .frame(height: 312)
-                    .background(.gray)
                 VStack {
                     HStack {
                         Text(details.name)
