@@ -10,7 +10,7 @@ import Foundation
 struct RestaurantListItem: Identifiable {
     let id: UUID
     let name: String
-    let priceLevel: PriceLevel
+    let priceLevel: PriceLevel?
     let phoneNumber: String?
     let menuURL: URL?
     let cuisine: String
@@ -21,11 +21,4 @@ struct RestaurantListItem: Identifiable {
     let ratingsAverage: String?
     let ratingsCount: Int?
     let labels: [String]
-
-    enum PriceLevel: Int {
-        case unknown = 0
-        case cheap = 1
-        case moderate = 2
-        case expensive = 3
-    }
 }

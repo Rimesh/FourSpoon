@@ -10,7 +10,7 @@ extension RestaurantListItemDTO {
         .init(
             id: id,
             name: attributes.name,
-            priceLevel: RestaurantListItem.PriceLevel(rawValue: attributes.priceLevel) ?? .unknown,
+            priceLevel: PriceLevel(rawValue: attributes.priceLevel),
             phoneNumber: attributes.phone,
             menuURL: attributes.menuURL,
             cuisine: attributes.cuisine,

@@ -30,12 +30,16 @@ struct RestaurantListItemView: View {
             }
             ZStack(alignment: .bottomLeading) {
                 RestaurantImageView(imageURL: restaurant.imageURL)
-                VStack {
+                VStack(alignment: .leading) {
+                    if let priceLevel = restaurant.priceLevel {
+                        PriceOverlayView(priceLevel: priceLevel)
+                    }
                     Text(restaurant.cuisine)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
                         .background(.white, in: .capsule)
                 }
+                .font(.system(size: 14, weight: .semibold))
                 .padding(.leading)
                 .padding(.bottom)
             }
